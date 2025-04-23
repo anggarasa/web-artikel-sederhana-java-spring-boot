@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Daftar Artikel</title>
+  <link th:href="@{/css/main.css}" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6">
+<div class="max-w-4xl mx-auto">
+  <h2 class="text-2xl font-bold mb-6">Daftar Artikel</h2>
+  <form th:action="@{/artikel/list}" method="get" class="mb-6">
+    <input type="text" name="search" placeholder="Cari artikel..." class="p-2 border rounded">
+    <button type="submit" class="bg-blue-500 text-white p-2 rounded">Cari</button>
+  </form>
+  <a th:href="@{/artikel/create}" class="bg-green-500 text-white p-2 rounded mb-4 inline-block">Tambah Artikel</a>
+  <div class="grid gap-4">
+    <div th:each="artikel : ${artikelList}" class="bg-white p-4 rounded shadow">
+      <h3 class="text-xl font-bold" th:text="${artikel.judul}"></h3>
+      <p class="text-gray-600" th:text="${artikel.penulis}"></p>
+      <p class="text-gray-600" th:text="${artikel.tanggalPublikasi}"></p>
+      <a th:href="@{/artikel/show/{id}(id=${artikel.id})}" class="text-blue-500">Lihat</a>
+      <a th:href="@{/artikel/edit/{id}(id=${artikel.id})}" class="text-yellow-500">Edit</a>
+      <a th:href="@{/artikel/delete/{id}(id=${artikel.id})}" class="text-red-500">Hapus</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>
