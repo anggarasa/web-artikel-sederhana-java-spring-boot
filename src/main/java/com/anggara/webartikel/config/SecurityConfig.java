@@ -21,7 +21,7 @@ public class SecurityConfig {
                         .requestMatchers("/artikel/**").authenticated()
                         .anyRequest().authenticated()
         ).formLogin(form -> form.loginPage("/login")
-                .defaultSuccessUrl("/artikel/list").permitAll()
+                .defaultSuccessUrl("/artikel/list").failureUrl("/login?error=true").permitAll()
         ).logout(logout -> logout.permitAll());
         return http.build();
     }
