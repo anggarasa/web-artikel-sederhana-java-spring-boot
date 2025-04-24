@@ -12,14 +12,17 @@
         <div class="mb-4">
             <label class="block text-gray-700">Judul</label>
             <input type="text" th:field="*{judul}" class="w-full p-2 border rounded">
+            <p th:if="${#fields.hasErrors('judul')}" th:errors="*{judul}" class="text-red-500 text-sm"></p>
         </div>
         <div class="mb-4">
             <label class="block text-gray-700">Konten</label>
             <textarea th:field="*{konten}" class="w-full p-2 border rounded" rows="6"></textarea>
+            <p th:if="${#fields.hasErrors('konten')}" th:errors="*{konten}" class="text-red-500 text-sm"></p>
         </div>
         <div class="mb-4">
             <label class="block text-gray-700">Penulis</label>
             <input type="text" th:field="*{penulis}" class="w-full p-2 border rounded">
+            <p th:if="${#fields.hasErrors('penulis')}" th:errors="*{penulis}" class="text-red-500 text-sm"></p>
         </div>
         <button type="submit" class="bg-blue-500 text-white p-2 rounded">Simpan</button>
     </form>

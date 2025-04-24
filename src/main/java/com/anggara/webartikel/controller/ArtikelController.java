@@ -2,9 +2,11 @@ package com.anggara.webartikel.controller;
 
 import com.anggara.webartikel.model.Artikel;
 import com.anggara.webartikel.service.ArtikelService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -30,7 +32,10 @@ public class ArtikelController {
     }
 
     @PostMapping("/create")
-    public String createArtikel(@ModelAttribute("artikel") Artikel artikel) {
+    public String createArtikel(@Valid @ModelAttribute("artikel") Artikel artikel, BindingResult result) {
+        if (result.hasErrors()) {
+            return "artikel/create"; // Kembali ke form jika ada error
+        }
         artikelService.save(artikel);
         return "redirect:/artikel/list";
     }
@@ -54,7 +59,10 @@ public class ArtikelController {
     }
 
     @PostMapping("/edit/{id}")
-    public String updateArtikel(@PathVariable("id") Long id, @ModelAttribute("artikel") Artikel artikel) {
+    public String updateArtikel(@PathVariable("id") Long id, @Valid @ModelAttribute("artikel") Artikel artikel, BindingResult result) {
+        if (result.hasErrors()) {
+            return "artikel/edit"; // Kembali ke form jika ada error
+        }
         artikel.setId(id);
         artikelService.save(artikel);
         return "redirect:/artikel/list";
