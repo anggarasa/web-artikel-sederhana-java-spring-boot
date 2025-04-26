@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <title>Detail Artikel</title>
@@ -12,6 +12,32 @@
   <p class="text-gray-600 mb-4" th:text="${artikel.tanggalPublikasi}"></p>
   <p th:text="${artikel.konten}"></p>
   <a th:href="@{/artikel/list}" class="bg-blue-500 text-white p-2 rounded mt-4 inline-block">Kembali</a>
+
+  <!-- Daftar Komentar -->
+  <div class="mt-8">
+    <h3 class="text-xl font-bold mb-4">Komentar</h3>
+    <div th:each="komentar : ${komentarList}" class="bg-gray-100 p-4 rounded mb-2">
+      <p th:text="${komentar.isi}"></p>
+      <p class="text-gray-600 text-sm" th:text="${komentar.user.username} + ' - ' + ${komentar.tanggalKomentar}"></p>
+    </div>
+    <p th:if="${komentarList.isEmpty()}" class="text-gray-600">Belum ada komentar.</p>
+  </div>
+
+  <!-- Form Komentar (Hanya untuk pengguna login) -->
+  <div sec:authorize="isAuthenticated()" class="mt-6">
+    <h3 class="text-lg font-bold mb-2">Tambah Komentar</h3>
+    <div th:if="${errorMessage}" class="text-red-500 text-sm mb-4" th:text="${errorMessage}"></div>
+    <form th:action="@{/komentar/add/{id}(id=${artikel.id})}" method="post" th:object="${newKomentar}">
+      <div class="mb-4">
+        <textarea th:field="*{isi}" class="w-full p-2 border rounded" rows="4" placeholder="Tulis komentar Anda..."></textarea>
+        <p th:if="${#fields.hasErrors('isi')}" th:errors="*{isi}" class="text-red-500 text-sm"></p>
+      </div>
+      <button type="submit" class="bg-blue-500 text-white p-2 rounded">Kirim Komentar</button>
+    </form>
+  </div>
+  <div sec:authorize="!isAuthenticated()" class="mt-6 text-gray-600">
+    <p>Silakan <a th:href="@{/login}" class="text-blue-500">login</a> untuk menambahkan komentar.</p>
+  </div>
 </div>
 </body>
 </html>

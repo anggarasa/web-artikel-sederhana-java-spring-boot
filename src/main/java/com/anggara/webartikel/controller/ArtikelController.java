@@ -1,19 +1,27 @@
 package com.anggara.webartikel.controller;
 
 import com.anggara.webartikel.model.Artikel;
+import com.anggara.webartikel.model.Komentar;
 import com.anggara.webartikel.service.ArtikelService;
+import com.anggara.webartikel.service.KomentarService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.View;
 
 @Controller
 @RequestMapping("/artikel")
 public class ArtikelController {
     @Autowired
     private ArtikelService artikelService;
+
+    @Autowired
+    private KomentarService komentarService;
+    @Autowired
+    private View error;
 
     @GetMapping("/list")
     public String listArtikel(Model model, @RequestParam(value = "search", required = false) String search) {
@@ -46,6 +54,11 @@ public class ArtikelController {
                 () -> new IllegalArgumentException("Invalid Artikel ID:" + id)
         );
         model.addAttribute("artikel", artikel);
+        model.addAttribute("komentarList", komentarService.findByArtikelId(id));
+        model.addAttribute("newKomentar", new Komentar());
+        if (error != null) {
+            model.addAttribute("errorMessage", "Komentar tidak boleh kosong");
+        }
         return "artikel/show";
     }
 
