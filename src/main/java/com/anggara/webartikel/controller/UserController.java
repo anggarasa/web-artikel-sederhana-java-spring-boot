@@ -4,6 +4,7 @@ import com.anggara.webartikel.model.User;
 import com.anggara.webartikel.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,7 +19,13 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/login")
-    public String login(@RequestParam(value = "error", required = false) String error, Model model) {
+    public String login(@RequestParam(value = "error",
+            required = false) String error,
+                        Model model,
+                        Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            return "redirect:/artikel/list";
+        }
         if (error != null) {
             model.addAttribute("errorMessage", "Username atau password salah");
         }
@@ -26,7 +33,10 @@ public class UserController {
     }
 
     @GetMapping("/register")
-    public String showRegisterForm(@ModelAttribute("user") User user) {
+    public String showRegisterForm(@ModelAttribute("user") User user, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            return "redirect:/artikel/list";
+        }
         return "register";
     }
 
@@ -37,5 +47,10 @@ public class UserController {
         }
         userService.registerUser(user);
         return "redirect:/login";
+    }
+
+    @PostMapping("/logout")
+    public String logout() {
+        return "redirect:/artikel/list?logout=true";
     }
 }

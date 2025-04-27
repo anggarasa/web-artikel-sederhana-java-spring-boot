@@ -17,12 +17,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(
-                auth -> auth.requestMatchers("/register", "/login", "/css/**", "/js/**", "/artikel/list", "/artikel/show/**").permitAll()
+                auth -> auth.requestMatchers("/css/**", "/js/**").permitAll()
+                        .requestMatchers("/register", "/login").anonymous()
+                        .requestMatchers("/artikel/list", "/artikel/show/**").permitAll()
                         .requestMatchers("/artikel/create", "/artikel/edit/**", "/artikel/delete/**", "/komentar/**").authenticated()
                         .anyRequest().authenticated()
         ).formLogin(form -> form.loginPage("/login")
                 .defaultSuccessUrl("/artikel/list").failureUrl("/login?error=true").permitAll()
-        ).logout(logout -> logout.permitAll());
+        ).logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/artikel/list").permitAll());
         return http.build();
     }
 
